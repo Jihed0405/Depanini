@@ -3,18 +3,26 @@ package com.PFE2024.Depanini.model;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
 @Entity
 public class ServiceProvider extends User {
+    @NotBlank(message = "Bio is required")
+    @Size(max = 255, message = "Bio cannot exceed 255 characters")
     private String bio;
-    private String photo;
+    @Column(length = 1000)
+    private String photoUrl;
+    @NotNull(message = "Number of experiences is required")
     private int numberOfExperiences;
 
     @ManyToMany

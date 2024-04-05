@@ -2,19 +2,20 @@ package com.PFE2024.Depanini.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
+
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-
 import com.PFE2024.Depanini.model.Category;
 import com.PFE2024.Depanini.model.ServiceEntity;
-import com.PFE2024.Depanini.model.User;
 import com.PFE2024.Depanini.repository.CategoryRepository;
 import com.PFE2024.Depanini.repository.ServiceRepository;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
 
 @Service
+@Validated
 public class CategoryServiceImpl implements CategoryService {
 
     @Autowired
@@ -24,13 +25,13 @@ public class CategoryServiceImpl implements CategoryService {
     private ServiceRepository serviceRepository;
 
     @Override
-    public Category createCategory(Category category) {
+    public Category createCategory(@Valid Category category) {
         return categoryRepository.save(category);
 
     }
 
     @Override
-    public Category updateCategory(Long categoryId, Category updatedCategory) {
+    public Category updateCategory(Long categoryId, @Valid Category updatedCategory) {
         Optional<Category> optionalCategory = categoryRepository.findById(categoryId);
         if (optionalCategory.isPresent()) {
             Category existingCategory = optionalCategory.get();

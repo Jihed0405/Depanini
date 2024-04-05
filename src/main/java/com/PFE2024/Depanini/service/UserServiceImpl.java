@@ -1,17 +1,20 @@
 package com.PFE2024.Depanini.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.PFE2024.Depanini.model.ServiceProvider;
 import com.PFE2024.Depanini.model.User;
 import com.PFE2024.Depanini.repository.ServiceProviderRepository;
 import com.PFE2024.Depanini.repository.UserRepository;
+import jakarta.validation.Valid;
 
 @Service
+@Validated
 public class UserServiceImpl implements UserService {
 
     @Autowired
@@ -21,7 +24,7 @@ public class UserServiceImpl implements UserService {
     private ServiceProviderRepository serviceProviderRepository;
 
     @Override
-    public User createUser(User user) {
+    public User createUser(@Valid User user) {
 
         User savedUser = userRepository.save(user);
 
@@ -30,15 +33,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User loginUser(String email, String password) {
-
         User user = userRepository.findByEmail(email);
 
         if (user != null && user.getPassword().equals(password)) {
-
             return user;
         } else {
-
-            return null;
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid email or password");
         }
     }
 
@@ -48,29 +48,36 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateUser(Long userId, User User, ServiceProvider serviceProvider) {
+    public User updateUser(Long userId, @Valid User updatedUser, @Valid ServiceProvider updatedServiceProvider) {
         User user = userRepository.findById(userId)
                 .orElseThrow(
-                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found with id: " + userId));
+                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found with ID: " + userId));
 
-        user.setFirstName(User.getFirstName());
-        user.setLastName(User.getLastName());
-        user.setEmail(User.getEmail());
-        user.setPhoneNumber(User.getPhoneNumber());
+        // Update user information
+        user.setFirstName(updatedUser.getFirstName());
+        user.setLastName(updatedUser.getLastName());
+        user.setEmail(updatedUser.getEmail());
+        user.setPhoneNumber(updatedUser.getPhoneNumber());
 
-        if (serviceProvider != null) {
-            ServiceProvider serviceProviderToSave = serviceProviderRepository.findById(userId)
+        if (updatedServiceProvider != null) {
+            // Find the ServiceProvider using some other identifier (e.g.,
+            // serviceProviderId)
+            ServiceProvider serviceProvider = serviceProviderRepository.findById(updatedServiceProvider.getId())
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                            "Service provider not found with id: " + userId));
+                            "Service provider not found with ID: " + updatedServiceProvider.getId()));
 
-            serviceProviderToSave.setBio(serviceProvider.getBio());
-            serviceProviderToSave.setPhoto(serviceProvider.getPhoto());
-            serviceProviderToSave.setNumberOfExperiences(serviceProvider.getNumberOfExperiences());
+            // Update ServiceProvider information
+            serviceProvider.setBio(updatedServiceProvider.getBio());
+            serviceProvider.setPhotoUrl(updatedServiceProvider.getPhotoUrl());
+            serviceProvider.setNumberOfExperiences(updatedServiceProvider.getNumberOfExperiences());
+            // Update other ServiceProvider fields as needed
+
+            // Save the updated ServiceProvider
+            serviceProviderRepository.save(serviceProvider);
         }
 
-        userRepository.save(user);
-
-        return user;
+        // Save the updated User
+        return userRepository.save(user);
     }
 
 }

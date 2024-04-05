@@ -3,42 +3,41 @@ package com.PFE2024.Depanini.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
 import com.PFE2024.Depanini.model.ServiceProvider;
 import com.PFE2024.Depanini.repository.ServiceProviderRepository;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Validated
 public class ServiceProviderServiceImpl implements ServiceProviderService {
 
     @Autowired
     private ServiceProviderRepository serviceProviderRepository;
 
     @Override
-    public ServiceProvider createServiceProvider(ServiceProvider serviceProvider) {
+    public ServiceProvider createServiceProvider(@Valid ServiceProvider serviceProvider) {
         return serviceProviderRepository.save(serviceProvider);
     }
 
     @Override
-    public ServiceProvider updateServiceProvider(Long serviceProviderId, ServiceProvider updatedServiceProvider) {
+    public ServiceProvider updateServiceProvider(Long serviceProviderId,
+            @Validated ServiceProvider updatedServiceProvider) {
         Optional<ServiceProvider> existingServiceProviderOptional = serviceProviderRepository
                 .findById(serviceProviderId);
-        if (existingServiceProviderOptional.isPresent()) {
-            ServiceProvider existingServiceProvider = existingServiceProviderOptional.get();
-            // Update the fields of existingServiceProvider with values from
-            // updatedServiceProvider
+        return existingServiceProviderOptional.map(existingServiceProvider -> {
             existingServiceProvider.setBio(updatedServiceProvider.getBio());
-            existingServiceProvider.setPhoto(updatedServiceProvider.getPhoto());
+            existingServiceProvider.setPhotoUrl(updatedServiceProvider.getPhotoUrl());
             existingServiceProvider.setNumberOfExperiences(updatedServiceProvider.getNumberOfExperiences());
-            // Update other fields as needed
+
             return serviceProviderRepository.save(existingServiceProvider);
-        } else {
-            throw new EntityNotFoundException("ServiceProvider not found with ID: " + serviceProviderId);
-        }
+        }).orElseThrow(() -> new EntityNotFoundException("ServiceProvider not found with ID: " + serviceProviderId));
     }
 
     @Override

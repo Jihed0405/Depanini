@@ -5,13 +5,18 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import com.PFE2024.Depanini.model.ServiceEntity;
 import com.PFE2024.Depanini.model.ServiceProvider;
 import com.PFE2024.Depanini.repository.ServiceRepository;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
 
+@Service
+@Validated
 public class ServiceEntityServiceImpl implements ServiceEntityService {
     @Autowired
     private ServiceRepository serviceEntityRepository;
@@ -19,14 +24,14 @@ public class ServiceEntityServiceImpl implements ServiceEntityService {
     private ServiceProvider serviceProvider;
 
     @Override
-    public ServiceEntity createServiceEntity(ServiceEntity serviceEntity) {
+    public ServiceEntity createServiceEntity(@Valid ServiceEntity serviceEntity) {
 
         return serviceEntityRepository.save(serviceEntity);
 
     }
 
     @Override
-    public ServiceEntity updateServiceEntity(Long serviceEntityId, ServiceEntity updatedServiceEntity) {
+    public ServiceEntity updateServiceEntity(Long serviceEntityId, @Valid ServiceEntity updatedServiceEntity) {
         ServiceEntity existingServiceEntity = serviceEntityRepository.findById(serviceEntityId).orElseThrow(
                 () -> new EntityNotFoundException("ServiceEntity for update not found with ID: " + serviceEntityId));
         existingServiceEntity.setName(updatedServiceEntity.getName());

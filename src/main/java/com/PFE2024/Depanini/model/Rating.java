@@ -5,6 +5,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
@@ -13,18 +17,24 @@ public class Rating {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    @Min(value = 0, message = "Work rating must be between 0 and 5")
+    @Max(value = 5, message = "Work rating must be between 0 and 5")
     private int workRating;
+    @Min(value = 0, message = "Discipline rating must be between 0 and 5")
+    @Max(value = 5, message = "Discipline rating must be between 0 and 5")
     private int disciplineRating;
+    @Min(value = 0, message = "Cost rating must be between 0 and 5")
+    @Max(value = 5, message = "Cost rating must be between 0 and 5")
     private int costRating;
 
     @ManyToOne
+    @NotNull(message = "User is required")
     private User user;
 
     @ManyToOne
+    @NotNull(message = "Service provider is required")
     private ServiceProvider serviceProvider;
+    @Size(max = 1000, message = "Comment cannot exceed 1000 characters")
+    private String comment;
 
-    private String comment; // New field for the optional comment
-
-    // Constructors, getters, and setters
 }

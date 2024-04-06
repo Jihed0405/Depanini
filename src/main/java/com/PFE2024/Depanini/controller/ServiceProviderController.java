@@ -53,8 +53,9 @@ public class ServiceProviderController {
     }
 
     @GetMapping("/byName")
-    public ResponseEntity<List<ServiceProvider>> getServiceProviderByName(@RequestParam String name) {
-        List<ServiceProvider> serviceProviders = serviceProviderService.getServiceProviderByName(name);
+    public ResponseEntity<List<ServiceProvider>> getServiceProviderByName(@RequestParam String firstName,
+            @RequestParam String lastName) {
+        List<ServiceProvider> serviceProviders = serviceProviderService.getServiceProviderByName(firstName, lastName);
         return ResponseEntity.ok(serviceProviders);
     }
 

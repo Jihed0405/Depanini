@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.PFE2024.Depanini.model.ServiceEntity;
 import com.PFE2024.Depanini.model.ServiceProvider;
 import com.PFE2024.Depanini.service.ServiceEntityService;
-import com.PFE2024.Depanini.service.ServiceProviderService;
 
 @RestController
 @RequestMapping("/api/services")

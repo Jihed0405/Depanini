@@ -1,4 +1,4 @@
-package com.PFE2024.Depanini.service;
+package com.PFE2024.Depanini.serviceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -11,6 +11,8 @@ import com.PFE2024.Depanini.model.ServiceProvider;
 import com.PFE2024.Depanini.model.User;
 import com.PFE2024.Depanini.repository.ServiceProviderRepository;
 import com.PFE2024.Depanini.repository.UserRepository;
+import com.PFE2024.Depanini.service.UserService;
+
 import jakarta.validation.Valid;
 
 @Service

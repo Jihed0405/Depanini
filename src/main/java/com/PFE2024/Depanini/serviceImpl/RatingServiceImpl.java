@@ -1,4 +1,4 @@
-package com.PFE2024.Depanini.service;
+package com.PFE2024.Depanini.serviceImpl;
 
 import java.util.List;
 
@@ -11,6 +11,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.PFE2024.Depanini.model.Rating;
 import com.PFE2024.Depanini.repository.RatingRepository;
+import com.PFE2024.Depanini.service.RatingService;
 
 import jakarta.validation.Valid;
 

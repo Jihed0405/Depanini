@@ -4,10 +4,13 @@ import java.util.List;
 import com.PFE2024.Depanini.model.ServiceEntity;
 import com.PFE2024.Depanini.model.ServiceProvider;
 
-public interface ServiceEntityService {
-    ServiceEntity createServiceEntity(ServiceEntity serviceEntity);
+import jakarta.validation.Valid;
 
-    ServiceEntity updateServiceEntity(Long serviceEntityId, ServiceEntity updatedServiceEntity);
+//
+public interface ServiceEntityService {
+    ServiceEntity createServiceEntity(@Valid ServiceEntity serviceEntity);
+
+    ServiceEntity updateServiceEntity(Long serviceEntityId, @Valid ServiceEntity updatedServiceEntity);
 
     void deleteServiceEntity(Long serviceEntityId);
 

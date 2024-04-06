@@ -1,4 +1,4 @@
-package com.PFE2024.Depanini.service;
+package com.PFE2024.Depanini.serviceImpl;
 
 import java.util.Collections;
 import java.util.List;
@@ -11,6 +11,7 @@ import org.springframework.validation.annotation.Validated;
 import com.PFE2024.Depanini.model.ServiceEntity;
 import com.PFE2024.Depanini.model.ServiceProvider;
 import com.PFE2024.Depanini.repository.ServiceRepository;
+import com.PFE2024.Depanini.service.ServiceEntityService;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
@@ -20,8 +21,6 @@ import jakarta.validation.Valid;
 public class ServiceEntityServiceImpl implements ServiceEntityService {
     @Autowired
     private ServiceRepository serviceEntityRepository;
-    @Autowired
-    private ServiceProvider serviceProvider;
 
     @Override
     public ServiceEntity createServiceEntity(@Valid ServiceEntity serviceEntity) {

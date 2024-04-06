@@ -1,4 +1,4 @@
-package com.PFE2024.Depanini.service;
+package com.PFE2024.Depanini.serviceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -7,6 +7,7 @@ import org.springframework.validation.annotation.Validated;
 
 import com.PFE2024.Depanini.model.ServiceProvider;
 import com.PFE2024.Depanini.repository.ServiceProviderRepository;
+import com.PFE2024.Depanini.service.ServiceProviderService;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
@@ -28,7 +29,7 @@ public class ServiceProviderServiceImpl implements ServiceProviderService {
 
     @Override
     public ServiceProvider updateServiceProvider(Long serviceProviderId,
-            @Validated ServiceProvider updatedServiceProvider) {
+            @Valid ServiceProvider updatedServiceProvider) {
         Optional<ServiceProvider> existingServiceProviderOptional = serviceProviderRepository
                 .findById(serviceProviderId);
         return existingServiceProviderOptional.map(existingServiceProvider -> {
@@ -52,8 +53,8 @@ public class ServiceProviderServiceImpl implements ServiceProviderService {
     }
 
     @Override
-    public List<ServiceProvider> getServiceProviderByName(String name) {
-        return serviceProviderRepository.findByName(name);
+    public List<ServiceProvider> getServiceProviderByName(String firstName, String lastName) {
+        return serviceProviderRepository.findByFirstNameAndLastName(firstName, lastName);
     }
 
     @Override

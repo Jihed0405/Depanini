@@ -7,7 +7,7 @@ import java.util.List;
 import com.PFE2024.Depanini.model.ServiceProvider;
 
 public interface ServiceProviderRepository extends JpaRepository<ServiceProvider, Long> {
-    List<ServiceProvider> findByName(String name);
+    List<ServiceProvider> findByFirstNameAndLastName(String firstName, String lastName);
 
     List<ServiceProvider> findByNumberOfExperiences(int numberOfExperiences);
 

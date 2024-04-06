@@ -1,4 +1,4 @@
-package com.PFE2024.Depanini.service;
+package com.PFE2024.Depanini.serviceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,6 +10,7 @@ import com.PFE2024.Depanini.model.Category;
 import com.PFE2024.Depanini.model.ServiceEntity;
 import com.PFE2024.Depanini.repository.CategoryRepository;
 import com.PFE2024.Depanini.repository.ServiceRepository;
+import com.PFE2024.Depanini.service.CategoryService;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;

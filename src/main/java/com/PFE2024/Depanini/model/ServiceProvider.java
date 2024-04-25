@@ -2,6 +2,8 @@ package com.PFE2024.Depanini.model;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -26,6 +28,7 @@ public class ServiceProvider extends User {
     private int numberOfExperiences;
 
     @ManyToMany
+    @NotNull(message = "Service is required")
     @JoinTable(name = "service_provider_service", joinColumns = @JoinColumn(name = "service_provider_id"), inverseJoinColumns = @JoinColumn(name = "service_id"))
     private List<ServiceEntity> services;
     @OneToMany(mappedBy = "serviceProvider", cascade = CascadeType.ALL)

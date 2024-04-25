@@ -10,6 +10,7 @@ import org.springframework.validation.annotation.Validated;
 
 import com.PFE2024.Depanini.model.ServiceEntity;
 import com.PFE2024.Depanini.model.ServiceProvider;
+import com.PFE2024.Depanini.repository.ServiceProviderRepository;
 import com.PFE2024.Depanini.repository.ServiceRepository;
 import com.PFE2024.Depanini.service.ServiceEntityService;
 
@@ -21,6 +22,8 @@ import jakarta.validation.Valid;
 public class ServiceEntityServiceImpl implements ServiceEntityService {
     @Autowired
     private ServiceRepository serviceEntityRepository;
+    @Autowired
+    private ServiceProviderRepository serviceProviderRepository;
 
     @Override
     public ServiceEntity createServiceEntity(@Valid ServiceEntity serviceEntity) {
@@ -55,13 +58,6 @@ public class ServiceEntityServiceImpl implements ServiceEntityService {
 
     @Override
     public List<ServiceProvider> getAllServiceProvidersByService(Long serviceId) {
-        Optional<ServiceEntity> serviceEntityOptional = serviceEntityRepository.findById(serviceId);
-        if (serviceEntityOptional.isPresent()) {
-            ServiceEntity serviceEntity = serviceEntityOptional.get();
-            return serviceEntity.getServiceProviders();
-        } else {
-
-            return Collections.emptyList(); // For example, returning an empty list
-        }
+        return serviceProviderRepository.findByServicesId(serviceId);
     }
 }

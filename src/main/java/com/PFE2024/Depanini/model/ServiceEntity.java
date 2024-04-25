@@ -26,6 +26,4 @@ public class ServiceEntity {
     @ManyToOne
     private Category category;
 
-    @ManyToMany(mappedBy = "services")
-    private List<ServiceProvider> serviceProviders;
 }

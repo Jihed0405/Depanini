@@ -2,6 +2,7 @@ package com.PFE2024.Depanini.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.PFE2024.Depanini.model.ServiceProvider;
 import com.PFE2024.Depanini.model.User;
+import com.PFE2024.Depanini.request.UpdateUserRequest;
 import com.PFE2024.Depanini.service.UserService;
 
 @RestController
@@ -43,9 +45,15 @@ public class UserController {
     }
 
     @PutMapping("/{userId}")
-    public ResponseEntity<User> updateUser(@PathVariable Long userId, @RequestBody User updatedUser,
-            @RequestBody(required = false) ServiceProvider updatedServiceProvider) {
-        User updatedUsers = userService.updateUser(userId, updatedUser, updatedServiceProvider);
-        return ResponseEntity.ok(updatedUsers);
+    public ResponseEntity<User> updateUser(@PathVariable Long userId,
+            @RequestBody UpdateUserRequest updateUserRequest) {
+        User updatedUser = userService.updateUser(userId, updateUserRequest);
+        return ResponseEntity.ok(updatedUser);
+    }
+
+    @GetMapping("/{userId}")
+    public ResponseEntity<User> getUserById(@PathVariable Long userId) {
+        User user = userService.getUserById(userId);
+        return ResponseEntity.ok(user);
     }
 }

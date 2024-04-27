@@ -32,5 +32,7 @@ public class User {
     private String email;
     @Pattern(regexp = "\\d{8}", message = "Phone number must be 8 digits")
     private String phoneNumber;
+    @NotBlank(message = "address is required")
+    private String address;
 
 }

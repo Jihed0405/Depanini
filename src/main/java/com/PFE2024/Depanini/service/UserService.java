@@ -2,6 +2,7 @@ package com.PFE2024.Depanini.service;
 
 import com.PFE2024.Depanini.model.ServiceProvider;
 import com.PFE2024.Depanini.model.User;
+import com.PFE2024.Depanini.request.UpdateUserRequest;
 
 import jakarta.validation.Valid;
 
@@ -12,5 +13,7 @@ public interface UserService {
 
     void logoutUser();
 
-    User updateUser(Long userId, @Valid User user, @Valid ServiceProvider serviceProvider);
+    User updateUser(Long userId, @Valid UpdateUserRequest updateUserRequest);
+
+    User getUserById(Long userId);
 }

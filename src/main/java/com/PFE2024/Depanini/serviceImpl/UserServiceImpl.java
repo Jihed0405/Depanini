@@ -11,6 +11,7 @@ import com.PFE2024.Depanini.model.ServiceProvider;
 import com.PFE2024.Depanini.model.User;
 import com.PFE2024.Depanini.repository.ServiceProviderRepository;
 import com.PFE2024.Depanini.repository.UserRepository;
+import com.PFE2024.Depanini.request.UpdateUserRequest;
 import com.PFE2024.Depanini.service.UserService;
 
 import jakarta.validation.Valid;
@@ -50,20 +51,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateUser(Long userId, @Valid User updatedUser, @Valid ServiceProvider updatedServiceProvider) {
+    public User updateUser(Long userId, @Valid UpdateUserRequest updateUserRequest) {
         User user = userRepository.findById(userId)
                 .orElseThrow(
                         () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found with ID: " + userId));
+        User updatedUser = updateUserRequest.getUpdatedUser();
+        if (updatedUser != null) {
+            user.setFirstName(updatedUser.getFirstName());
+            user.setLastName(updatedUser.getLastName());
+            user.setEmail(updatedUser.getEmail());
+            user.setPhoneNumber(updatedUser.getPhoneNumber());
+            user.setAddress(updatedUser.getAddress());
 
+        }
+        ServiceProvider updatedServiceProvider = updateUserRequest.getUpdatedServiceProvider();
         // Update user information
-        user.setFirstName(updatedUser.getFirstName());
-        user.setLastName(updatedUser.getLastName());
-        user.setEmail(updatedUser.getEmail());
-        user.setPhoneNumber(updatedUser.getPhoneNumber());
 
         if (updatedServiceProvider != null) {
-            // Find the ServiceProvider using some other identifier (e.g.,
-            // serviceProviderId)
+
             ServiceProvider serviceProvider = serviceProviderRepository.findById(updatedServiceProvider.getId())
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                             "Service provider not found with ID: " + updatedServiceProvider.getId()));
@@ -82,4 +87,10 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user);
     }
 
+    @Override
+    public User getUserById(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "User not found with ID: " + userId));
+    }
 }

@@ -15,6 +15,8 @@ public interface ServiceProviderService {
 
     List<ServiceProvider> getAllServiceProviders();
 
+    ServiceProvider getServiceProviderById(Long serviceProviderId);
+
     List<ServiceProvider> getServiceProviderByName(String firstName, String lastName);
 
     List<ServiceProvider> getServiceProviderByExperience(int numberOfExperiences);

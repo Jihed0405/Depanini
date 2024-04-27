@@ -1,10 +1,13 @@
 package com.PFE2024.Depanini.serviceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.server.ResponseStatusException;
 
+import com.PFE2024.Depanini.model.Rating;
 import com.PFE2024.Depanini.model.ServiceProvider;
 import com.PFE2024.Depanini.repository.ServiceProviderRepository;
 import com.PFE2024.Depanini.service.ServiceProviderService;
@@ -50,6 +53,13 @@ public class ServiceProviderServiceImpl implements ServiceProviderService {
     @Override
     public List<ServiceProvider> getAllServiceProviders() {
         return serviceProviderRepository.findAll();
+    }
+
+    @Override
+    public ServiceProvider getServiceProviderById(Long serviceProviderId) {
+        return serviceProviderRepository.findById(serviceProviderId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Rating not found with ID: " + serviceProviderId));
     }
 
     @Override

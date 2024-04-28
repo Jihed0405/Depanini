@@ -67,4 +67,11 @@ public class RatingServiceImpl implements RatingService {
         // Delete rating from the repository
         ratingRepository.delete(existingRating);
     }
+
+    @Override
+    public List<Rating> getRatingByServiceProvider(Long serviceProviderId) {
+        return ratingRepository.findByServiceProviderId(serviceProviderId);
+
+    }
+
 }

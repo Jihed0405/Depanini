@@ -17,4 +17,6 @@ public interface RatingService {
     Rating updateRating(Long ratingId, @Valid Rating updatedRating);
 
     void deleteRating(Long ratingId);
+
+    List<Rating> getRatingByServiceProvider(Long serviceProviderId);
 }

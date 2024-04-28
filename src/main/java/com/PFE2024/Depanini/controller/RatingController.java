@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.PFE2024.Depanini.model.Rating;
+import com.PFE2024.Depanini.model.ServiceEntity;
 import com.PFE2024.Depanini.service.RatingService;
 
 @RestController
@@ -35,6 +36,12 @@ public class RatingController {
     public ResponseEntity<Rating> getRatingById(@PathVariable Long ratingId) {
         Rating rating = ratingService.getRatingById(ratingId);
         return ResponseEntity.ok(rating);
+    }
+
+    @GetMapping("/{serviceProviderId}/provider")
+    public ResponseEntity<List<Rating>> getRatingByServiceProvider(@PathVariable Long serviceProviderId) {
+        List<Rating> ratings = ratingService.getRatingByServiceProvider(serviceProviderId);
+        return ResponseEntity.ok(ratings);
     }
 
     @GetMapping

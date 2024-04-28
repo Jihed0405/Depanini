@@ -31,6 +31,7 @@ public class ServiceProvider extends User {
     @NotNull(message = "Service is required")
     @JoinTable(name = "service_provider_service", joinColumns = @JoinColumn(name = "service_provider_id"), inverseJoinColumns = @JoinColumn(name = "service_id"))
     private List<ServiceEntity> services;
+    @JsonIgnore
     @OneToMany(mappedBy = "serviceProvider", cascade = CascadeType.ALL)
     private List<Rating> ratings;
 }

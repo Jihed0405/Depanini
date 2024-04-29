@@ -16,6 +16,8 @@ public interface ServiceProviderRepository extends JpaRepository<ServiceProvider
     @Query("SELECT sp FROM ServiceProvider sp JOIN sp.services se WHERE se.id = :serviceId")
     List<ServiceProvider> findByServicesId(Long serviceId);
 
-    @Query("SELECT DISTINCT s FROM ServiceProvider s JOIN s.ratings r WHERE r.workRating >= :minRanking AND r.disciplineRating >= :minRanking AND r.costRating >= :minRanking")
+    @Query("SELECT DISTINCT s FROM ServiceProvider s JOIN s.ratings r WHERE "
+            + "calculate_overall_rating(r.workRating, r.disciplineRating, r.costRating) >= :minRanking")
     List<ServiceProvider> findByRankingGreaterThanEqual(int minRanking);
+
 }

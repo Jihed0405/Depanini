@@ -44,7 +44,7 @@ public class ServiceProviderServiceImpl implements ServiceProviderService {
             existingServiceProvider.setBio(updatedServiceProvider.getBio());
             existingServiceProvider.setPhotoUrl(updatedServiceProvider.getPhotoUrl());
             existingServiceProvider.setNumberOfExperiences(updatedServiceProvider.getNumberOfExperiences());
-
+            existingServiceProvider.setServices(updatedServiceProvider.getServices());
             return serviceProviderRepository.save(existingServiceProvider);
         }).orElseThrow(() -> new EntityNotFoundException("ServiceProvider not found with ID: " + serviceProviderId));
     }

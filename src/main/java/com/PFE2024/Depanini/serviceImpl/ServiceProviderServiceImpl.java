@@ -36,6 +36,11 @@ public class ServiceProviderServiceImpl implements ServiceProviderService {
         Optional<ServiceProvider> existingServiceProviderOptional = serviceProviderRepository
                 .findById(serviceProviderId);
         return existingServiceProviderOptional.map(existingServiceProvider -> {
+            existingServiceProvider.setFirstName(updatedServiceProvider.getFirstName());
+            existingServiceProvider.setLastName(updatedServiceProvider.getLastName());
+            existingServiceProvider.setEmail(updatedServiceProvider.getEmail());
+            existingServiceProvider.setPhoneNumber(updatedServiceProvider.getPhoneNumber());
+            existingServiceProvider.setAddress(updatedServiceProvider.getAddress());
             existingServiceProvider.setBio(updatedServiceProvider.getBio());
             existingServiceProvider.setPhotoUrl(updatedServiceProvider.getPhotoUrl());
             existingServiceProvider.setNumberOfExperiences(updatedServiceProvider.getNumberOfExperiences());

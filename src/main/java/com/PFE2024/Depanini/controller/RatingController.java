@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.PFE2024.Depanini.model.Rating;
 import com.PFE2024.Depanini.model.ServiceEntity;
 import com.PFE2024.Depanini.service.RatingService;
+import java.util.Date;
 
 @RestController
 @RequestMapping("/api/ratings")
@@ -28,6 +29,7 @@ public class RatingController {
 
     @PostMapping("/create")
     public ResponseEntity<Rating> createRating(@RequestBody Rating rating) {
+        rating.setDate(new Date());
         Rating createdRating = ratingService.createRating(rating);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdRating);
     }

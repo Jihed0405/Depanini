@@ -1,5 +1,6 @@
 package com.PFE2024.Depanini.serviceImpl;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,8 +52,9 @@ public class RatingServiceImpl implements RatingService {
         existingRating.setDisciplineRating(updatedRating.getDisciplineRating());
         existingRating.setCostRating(updatedRating.getCostRating());
         existingRating.setComment(updatedRating.getComment());
-        // Update any other fields as needed
-
+        existingRating.setServiceProvider(updatedRating.getServiceProvider());
+        existingRating.setUser(updatedRating.getUser());
+        existingRating.setDate(new Date());
         // Save and return updated rating
         return ratingRepository.save(existingRating);
     }

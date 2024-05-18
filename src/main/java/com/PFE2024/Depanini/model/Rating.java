@@ -1,5 +1,7 @@
 package com.PFE2024.Depanini.model;
 
+import java.util.Date;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -37,5 +39,6 @@ public class Rating {
     private User user;
     @Size(max = 1000, message = "Comment cannot exceed 1000 characters")
     private String comment;
+    private Date date;
 
 }

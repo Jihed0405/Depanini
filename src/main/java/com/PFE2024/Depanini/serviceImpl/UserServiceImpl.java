@@ -28,7 +28,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createUser(@Valid User user) {
-
+        if (user.getId() != null) {
+            throw new IllegalArgumentException(
+                    "ID should not be provided for a new user. It will be generated automatically.");
+        }
         User savedUser = userRepository.save(user);
 
         return savedUser;
@@ -62,6 +65,7 @@ public class UserServiceImpl implements UserService {
             user.setEmail(updatedUser.getEmail());
             user.setPhoneNumber(updatedUser.getPhoneNumber());
             user.setAddress(updatedUser.getAddress());
+            user.setPhotoUrl(updatedUser.getPhotoUrl());
 
         }
         ServiceProvider updatedServiceProvider = updateUserRequest.getUpdatedServiceProvider();
@@ -75,7 +79,7 @@ public class UserServiceImpl implements UserService {
 
             // Update ServiceProvider information
             serviceProvider.setBio(updatedServiceProvider.getBio());
-            serviceProvider.setPhotoUrl(updatedServiceProvider.getPhotoUrl());
+
             serviceProvider.setNumberOfExperiences(updatedServiceProvider.getNumberOfExperiences());
             // Update other ServiceProvider fields as needed
 

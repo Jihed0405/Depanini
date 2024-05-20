@@ -22,8 +22,7 @@ public class ServiceProvider extends User {
     @NotBlank(message = "Bio is required")
     @Size(max = 255, message = "Bio cannot exceed 255 characters")
     private String bio;
-    @Column(length = 1000)
-    private String photoUrl;
+
     @NotNull(message = "Number of experiences is required")
     private int numberOfExperiences;
 

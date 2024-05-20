@@ -1,5 +1,6 @@
 package com.PFE2024.Depanini.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -34,5 +35,6 @@ public class User {
     private String phoneNumber;
     @NotBlank(message = "address is required")
     private String address;
-
+    @Column(length = 1000)
+    private String photoUrl;
 }

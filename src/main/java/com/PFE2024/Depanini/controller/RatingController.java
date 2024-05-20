@@ -15,21 +15,43 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.PFE2024.Depanini.model.Rating;
 import com.PFE2024.Depanini.model.ServiceEntity;
+import com.PFE2024.Depanini.model.ServiceProvider;
+import com.PFE2024.Depanini.model.User;
+import com.PFE2024.Depanini.model.dto.RatingDTO;
 import com.PFE2024.Depanini.service.RatingService;
+import com.PFE2024.Depanini.service.ServiceProviderService;
+import com.PFE2024.Depanini.service.UserService;
+
 import java.util.Date;
 
 @RestController
 @RequestMapping("/api/ratings")
 public class RatingController {
     private final RatingService ratingService;
+    private UserService userService;
+    private ServiceProviderService serviceProviderService;
 
-    public RatingController(RatingService ratingService) {
+    public RatingController(RatingService ratingService, UserService userService,
+            ServiceProviderService serviceProviderService) {
         this.ratingService = ratingService;
+        this.userService = userService;
+        this.serviceProviderService = serviceProviderService;
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Rating> createRating(@RequestBody Rating rating) {
+    public ResponseEntity<Rating> createRating(@RequestBody RatingDTO ratingDTO) {
+        Rating rating = new Rating();
+        rating.setWorkRating(ratingDTO.getWorkRating());
+        rating.setDisciplineRating(ratingDTO.getDisciplineRating());
+        rating.setCostRating(ratingDTO.getCostRating());
+        rating.setComment(ratingDTO.getComment());
         rating.setDate(new Date());
+        User user = userService.getUserById(ratingDTO.getUserId());
+        ServiceProvider serviceProvider = serviceProviderService
+                .getServiceProviderById(ratingDTO.getServiceProviderId());
+
+        rating.setUser(user);
+        rating.setServiceProvider(serviceProvider);
         Rating createdRating = ratingService.createRating(rating);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdRating);
     }

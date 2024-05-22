@@ -8,4 +8,6 @@ public interface MessageService {
     Message saveMessage(Message message);
 
     List<Message> getMessagesBetweenUsers(Long senderId, Long receiverId);
+
+    List<Message> getAllMessages();
 }

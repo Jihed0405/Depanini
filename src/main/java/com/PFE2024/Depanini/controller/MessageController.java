@@ -7,11 +7,15 @@ import java.nio.file.Paths;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.PFE2024.Depanini.model.Category;
 import com.PFE2024.Depanini.model.Message;
 import com.PFE2024.Depanini.model.MessageType;
 import com.PFE2024.Depanini.model.User;
@@ -37,7 +41,7 @@ public class MessageController {
     @PostMapping(consumes = { "multipart/form-data" })
     public ResponseEntity<Message> sendMessage(
             @RequestPart("messageDTO") String messageDTOStr,
-            @RequestPart("file") MultipartFile file) throws IOException {
+            @RequestPart(name = "file", required = false) MultipartFile file) throws IOException {
         logger.info("Received sendMessage request with MessageDTO: {}", messageDTOStr);
 
         // Deserialize the JSON string to MessageDTO
@@ -58,9 +62,9 @@ public class MessageController {
         }
 
         String filePath = null;
-        if (!file.isEmpty()) {
+        if (file != null && !file.isEmpty()) {
             if (messageDTO.getMessageType() == MessageType.MEDIA)
-                filePath = saveFile(file);
+                filePath = saveFile(file, messageDTO.getSenderId(), messageDTO.getReceiverId());
         }
 
         Message message = new Message();
@@ -79,15 +83,44 @@ public class MessageController {
         return messageService.getMessagesBetweenUsers(senderId, receiverId);
     }
 
-    private String saveFile(MultipartFile file) throws IOException {
-        String uploadDir = "uploads/";
+    @GetMapping("/all")
+    public ResponseEntity<List<Message>> getAllMessages() {
+        List<Message> messages = messageService.getAllMessages();
+        return ResponseEntity.ok(messages);
+    }
+
+    @GetMapping("/files/{senderId}_{receiverId}/{fileName}")
+    public ResponseEntity<Resource> getFile(@PathVariable Long senderId, @PathVariable Long receiverId,
+            @PathVariable String fileName) throws IOException {
+
+        Path filePath = Paths.get("uploads/" + senderId + "_" + receiverId + "/" + fileName);
+        Resource resource = new UrlResource(filePath.toUri());
+
+        if (resource.exists() || resource.isReadable()) {
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+                    .body(resource);
+        } else {
+            throw new RuntimeException("Could not read the file!");
+        }
+    }
+
+    private String saveFile(MultipartFile file, Long senderId, Long receiverId) throws IOException {
+        String uploadDir = "uploads/" + senderId + "_" + receiverId + "/";
+        uploadDir = uploadDir.replace("\\", "/");
         Path uploadPath = Paths.get(uploadDir);
         if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);
         }
+
         String fileName = file.getOriginalFilename();
+        logger.info("Received file with name: {}", fileName);
         Path filePath = uploadPath.resolve(fileName);
+        logger.info("Saving file to path: {}", filePath.toString());
         file.transferTo(filePath);
-        return filePath.toString();
+        String normalizedPath = filePath.toString().replace("\\", "/");
+        logger.info("Normalized file path: {}", normalizedPath);
+        return normalizedPath;
     }
+
 }

@@ -24,4 +24,8 @@ public class MessageServiceImpl implements MessageService {
     public List<Message> getMessagesBetweenUsers(Long senderId, Long receiverId) {
         return messageRepository.findBySenderIdAndReceiverId(senderId, receiverId);
     }
+
+    public List<Message> getAllMessages() {
+        return messageRepository.findAll();
+    }
 }

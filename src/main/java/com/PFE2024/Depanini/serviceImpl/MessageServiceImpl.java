@@ -22,7 +22,7 @@ public class MessageServiceImpl implements MessageService {
     }
 
     public List<Message> getMessagesBetweenUsers(Long senderId, Long receiverId) {
-        return messageRepository.findBySenderIdAndReceiverId(senderId, receiverId);
+        return messageRepository.findMessagesBetweenUsers(senderId, receiverId);
     }
 
     public List<Message> getAllMessages() {

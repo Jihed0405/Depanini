@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.PFE2024.Depanini.model.Rating;
-import com.PFE2024.Depanini.model.ServiceEntity;
 import com.PFE2024.Depanini.model.ServiceProvider;
 import com.PFE2024.Depanini.model.User;
 import com.PFE2024.Depanini.model.dto.RatingDTO;
@@ -39,7 +39,16 @@ public class RatingController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Rating> createRating(@RequestBody RatingDTO ratingDTO) {
+    public ResponseEntity<?> createRating(@RequestBody RatingDTO ratingDTO) throws Exception {
+        Long userId = ratingDTO.getUserId();
+        Long serviceProviderId = ratingDTO.getServiceProviderId();
+
+        boolean ratingExists = ratingService.doesRatingExist(userId, serviceProviderId);
+
+        if (ratingExists) {
+            return ResponseEntity.badRequest().body("You can only add a review once.");
+        }
+
         Rating rating = new Rating();
         rating.setWorkRating(ratingDTO.getWorkRating());
         rating.setDisciplineRating(ratingDTO.getDisciplineRating());
@@ -85,4 +94,11 @@ public class RatingController {
         ratingService.deleteRating(ratingId);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/ratings/exist")
+    public ResponseEntity<Boolean> doesRatingExist(@RequestParam Long userId, @RequestParam Long serviceProviderId) {
+        boolean exists = ratingService.doesRatingExist(userId, serviceProviderId);
+        return ResponseEntity.ok(exists);
+    }
+
 }

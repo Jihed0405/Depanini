@@ -2,6 +2,7 @@ package com.PFE2024.Depanini.serviceImpl;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -24,7 +25,12 @@ public class RatingServiceImpl implements RatingService {
     private RatingRepository ratingRepository;
 
     @Override
-    public Rating createRating(@Valid Rating rating) {
+    public Rating createRating(@Valid Rating rating) throws Exception {
+        Optional<Rating> existingRating = ratingRepository.findByUserAndServiceProvider(rating.getUser(),
+                rating.getServiceProvider());
+        if (existingRating.isPresent()) {
+            throw new Exception("User has already rated this service provider.");
+        }
         return ratingRepository.save(rating);
     }
 
@@ -74,6 +80,10 @@ public class RatingServiceImpl implements RatingService {
     public List<Rating> getRatingByServiceProvider(Long serviceProviderId) {
         return ratingRepository.findByServiceProviderId(serviceProviderId);
 
+    }
+
+    public boolean doesRatingExist(Long userId, Long serviceProviderId) {
+        return ratingRepository.existsByUserIdAndServiceProviderId(userId, serviceProviderId);
     }
 
 }

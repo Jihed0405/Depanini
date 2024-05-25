@@ -8,7 +8,7 @@ import jakarta.validation.Valid;
 
 public interface RatingService {
 
-    Rating createRating(@Valid Rating rating);
+    Rating createRating(@Valid Rating rating) throws Exception;
 
     Rating getRatingById(Long ratingId);
 
@@ -19,4 +19,6 @@ public interface RatingService {
     void deleteRating(Long ratingId);
 
     List<Rating> getRatingByServiceProvider(Long serviceProviderId);
+
+    boolean doesRatingExist(Long userId, Long serviceProviderId);
 }

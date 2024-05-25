@@ -105,6 +105,11 @@ public class MessageController {
         }
     }
 
+    @GetMapping("/user-messages")
+    public List<Message> getUserMessages(@RequestParam Long userId) {
+        return messageService.getUserMessages(userId);
+    }
+
     private String saveFile(MultipartFile file, Long senderId, Long receiverId) throws IOException {
         String uploadDir = "uploads/" + senderId + "_" + receiverId + "/";
         uploadDir = uploadDir.replace("\\", "/");

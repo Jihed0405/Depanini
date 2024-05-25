@@ -10,4 +10,6 @@ public interface MessageService {
     List<Message> getMessagesBetweenUsers(Long senderId, Long receiverId);
 
     List<Message> getAllMessages();
+
+    List<Message> getUserMessages(Long userId);
 }

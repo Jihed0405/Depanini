@@ -12,4 +12,6 @@ public interface MessageService {
     List<Message> getAllMessages();
 
     List<Message> getUserMessages(Long userId);
+
+    void updateSeenDate(List<Long> messageIds, Long userId);
 }

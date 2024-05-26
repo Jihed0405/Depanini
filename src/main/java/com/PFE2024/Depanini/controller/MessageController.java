@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -20,6 +21,7 @@ import com.PFE2024.Depanini.model.Message;
 import com.PFE2024.Depanini.model.MessageType;
 import com.PFE2024.Depanini.model.User;
 import com.PFE2024.Depanini.model.dto.MessageDTO;
+import com.PFE2024.Depanini.request.SeenDateUpdateRequest;
 import com.PFE2024.Depanini.service.MessageService;
 import com.PFE2024.Depanini.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -108,6 +110,17 @@ public class MessageController {
     @GetMapping("/user-messages")
     public List<Message> getUserMessages(@RequestParam Long userId) {
         return messageService.getUserMessages(userId);
+    }
+
+    @PostMapping("/updateSeenDate")
+    public ResponseEntity<Void> updateSeenDate(@RequestBody SeenDateUpdateRequest request) {
+        List<Long> messageIds = request.getMessageIds();
+        Long userId = request.getUserId();
+
+        // Call the service method to update the seen date
+        messageService.updateSeenDate(messageIds, userId);
+
+        return ResponseEntity.ok().build();
     }
 
     private String saveFile(MultipartFile file, Long senderId, Long receiverId) throws IOException {

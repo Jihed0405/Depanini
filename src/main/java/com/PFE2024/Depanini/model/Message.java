@@ -23,7 +23,7 @@ public class Message {
     private User receiver;
     private String content;
     private Date timestamp;
-
+    private Date seenDate;
     @Enumerated(EnumType.STRING)
     private MessageType messageType;
 

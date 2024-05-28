@@ -6,6 +6,8 @@ import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
 import java.util.Optional;
+import com.PFE2024.Depanini.exception.CategoryHasServicesException;
+import com.PFE2024.Depanini.exception.CategoryNotFoundException;
 import com.PFE2024.Depanini.model.Category;
 import com.PFE2024.Depanini.model.ServiceEntity;
 import com.PFE2024.Depanini.repository.CategoryRepository;
@@ -46,13 +48,16 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void deleteCategory(Long categoryId) {
-        Optional<Category> optionalCategory = categoryRepository.findById(categoryId);
-        if (optionalCategory.isPresent()) {
-
-            categoryRepository.delete(optionalCategory.get());
+        Optional<Category> categoryOptional = categoryRepository.findById(categoryId);
+        if (categoryOptional.isPresent()) {
+            List<ServiceEntity> services = serviceRepository.findByCategoryId(categoryId);
+            if (!services.isEmpty()) { // assuming getServices() returns the list of services
+                throw new CategoryHasServicesException("Category has associated services and cannot be deleted");
+            }
+            categoryRepository.deleteById(categoryId);
         } else {
-
-            throw new EntityNotFoundException("Category for delete not found with ID: " + categoryId);
+            throw new CategoryNotFoundException("Category not found with id " + categoryId); // Assume this exception is
+                                                                                             // defined similarly
         }
     }
 

@@ -1,12 +1,18 @@
 package com.PFE2024.Depanini.serviceImpl;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.PFE2024.Depanini.exception.UserNotFoundException;
+import com.PFE2024.Depanini.model.Category;
 import com.PFE2024.Depanini.model.ServiceProvider;
 import com.PFE2024.Depanini.model.User;
 import com.PFE2024.Depanini.repository.ServiceProviderRepository;
@@ -54,41 +60,57 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateUser(Long userId, @Valid UpdateUserRequest updateUserRequest) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(
-                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found with ID: " + userId));
-        User updatedUser = updateUserRequest.getUpdatedUser();
-        if (updatedUser != null) {
-            user.setFirstName(updatedUser.getFirstName());
-            user.setLastName(updatedUser.getLastName());
-            user.setEmail(updatedUser.getEmail());
-            user.setPhoneNumber(updatedUser.getPhoneNumber());
-            user.setAddress(updatedUser.getAddress());
-            user.setPhotoUrl(updatedUser.getPhotoUrl());
-
-        }
-        ServiceProvider updatedServiceProvider = updateUserRequest.getUpdatedServiceProvider();
-        // Update user information
-
-        if (updatedServiceProvider != null) {
-
-            ServiceProvider serviceProvider = serviceProviderRepository.findById(updatedServiceProvider.getId())
+    public User updateUser(Long userId, @RequestBody UpdateUserRequest updateUserRequest) {
+        try {
+            User user = userRepository.findById(userId)
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                            "Service provider not found with ID: " + updatedServiceProvider.getId()));
+                            "User not found with ID: " + userId));
 
-            // Update ServiceProvider information
-            serviceProvider.setBio(updatedServiceProvider.getBio());
+            if (user instanceof ServiceProvider) {
+                ServiceProvider serviceProvider = (ServiceProvider) user;
 
-            serviceProvider.setNumberOfExperiences(updatedServiceProvider.getNumberOfExperiences());
-            // Update other ServiceProvider fields as needed
+                // Update user information
+                User updatedUser = updateUserRequest.getUpdatedUser();
+                if (updatedUser != null) {
+                    serviceProvider.setFirstName(updatedUser.getFirstName());
+                    serviceProvider.setLastName(updatedUser.getLastName());
+                    serviceProvider.setEmail(updatedUser.getEmail());
+                    serviceProvider.setPhoneNumber(updatedUser.getPhoneNumber());
+                    serviceProvider.setAddress(updatedUser.getAddress());
+                    serviceProvider.setPhotoUrl(updatedUser.getPhotoUrl());
+                }
 
-            // Save the updated ServiceProvider
-            serviceProviderRepository.save(serviceProvider);
+                // Update ServiceProvider information if provided
+                ServiceProvider updatedServiceProvider = updateUserRequest.getUpdatedServiceProvider();
+                if (updatedServiceProvider != null) {
+                    serviceProvider.setBio(updatedServiceProvider.getBio());
+                    serviceProvider.setNumberOfExperiences(updatedServiceProvider.getNumberOfExperiences());
+                    // Update other ServiceProvider fields as needed
+                }
+
+                // Save the updated ServiceProvider
+                return userRepository.save(serviceProvider);
+            } else {
+                // Update user information
+                User updatedUser = updateUserRequest.getUpdatedUser();
+                System.out.println("Updated User: " + updatedUser);
+                if (updatedUser != null) {
+                    user.setFirstName(updatedUser.getFirstName());
+                    user.setLastName(updatedUser.getLastName());
+                    user.setEmail(updatedUser.getEmail());
+                    user.setPhoneNumber(updatedUser.getPhoneNumber());
+                    user.setAddress(updatedUser.getAddress());
+                    user.setPhotoUrl(updatedUser.getPhotoUrl());
+                }
+
+                // Save the updated User
+                return userRepository.save(user);
+            }
+        } catch (Exception e) {
+            // Handle unexpected exceptions and return a custom error message
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "An unexpected error occurred: " + e.getMessage());
         }
-
-        // Save the updated User
-        return userRepository.save(user);
     }
 
     @Override
@@ -96,5 +118,20 @@ public class UserServiceImpl implements UserService {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         "User not found with ID: " + userId));
+    }
+
+    @Override
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+
+    }
+
+    public void deleteUser(Long userId) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (userOptional.isPresent()) {
+            userRepository.deleteById(userId);
+        } else {
+            throw new UserNotFoundException("User not found with id " + userId);
+        }
     }
 }

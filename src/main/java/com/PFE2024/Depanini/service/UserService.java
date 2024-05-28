@@ -1,5 +1,8 @@
 package com.PFE2024.Depanini.service;
 
+import java.util.List;
+
+import com.PFE2024.Depanini.model.Category;
 import com.PFE2024.Depanini.model.ServiceProvider;
 import com.PFE2024.Depanini.model.User;
 import com.PFE2024.Depanini.request.UpdateUserRequest;
@@ -16,4 +19,8 @@ public interface UserService {
     User updateUser(Long userId, @Valid UpdateUserRequest updateUserRequest);
 
     User getUserById(Long userId);
+
+    List<User> getAllUsers();
+
+    public void deleteUser(Long userId);
 }

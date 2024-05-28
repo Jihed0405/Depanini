@@ -15,6 +15,7 @@ import com.PFE2024.Depanini.exception.UserNotFoundException;
 import com.PFE2024.Depanini.model.Category;
 import com.PFE2024.Depanini.model.ServiceProvider;
 import com.PFE2024.Depanini.model.User;
+import com.PFE2024.Depanini.model.UserType;
 import com.PFE2024.Depanini.repository.ServiceProviderRepository;
 import com.PFE2024.Depanini.repository.UserRepository;
 import com.PFE2024.Depanini.request.UpdateUserRequest;
@@ -78,6 +79,7 @@ public class UserServiceImpl implements UserService {
                     serviceProvider.setPhoneNumber(updatedUser.getPhoneNumber());
                     serviceProvider.setAddress(updatedUser.getAddress());
                     serviceProvider.setPhotoUrl(updatedUser.getPhotoUrl());
+                    serviceProvider.setUserType(updatedUser.getUserType());
                 }
 
                 // Update ServiceProvider information if provided
@@ -85,6 +87,7 @@ public class UserServiceImpl implements UserService {
                 if (updatedServiceProvider != null) {
                     serviceProvider.setBio(updatedServiceProvider.getBio());
                     serviceProvider.setNumberOfExperiences(updatedServiceProvider.getNumberOfExperiences());
+
                     // Update other ServiceProvider fields as needed
                 }
 
@@ -101,6 +104,7 @@ public class UserServiceImpl implements UserService {
                     user.setPhoneNumber(updatedUser.getPhoneNumber());
                     user.setAddress(updatedUser.getAddress());
                     user.setPhotoUrl(updatedUser.getPhotoUrl());
+                    user.setUserType(updatedUser.getUserType());
                 }
 
                 // Save the updated User
@@ -124,6 +128,10 @@ public class UserServiceImpl implements UserService {
     public List<User> getAllUsers() {
         return userRepository.findAll();
 
+    }
+
+    public List<User> getUsersByType(UserType userType) {
+        return userRepository.findByUserType(userType);
     }
 
     public void deleteUser(Long userId) {

@@ -18,6 +18,7 @@ import com.PFE2024.Depanini.exception.UserNotFoundException;
 import com.PFE2024.Depanini.model.Category;
 import com.PFE2024.Depanini.model.ServiceProvider;
 import com.PFE2024.Depanini.model.User;
+import com.PFE2024.Depanini.model.UserType;
 import com.PFE2024.Depanini.request.UpdateUserRequest;
 import com.PFE2024.Depanini.service.UserService;
 
@@ -39,6 +40,7 @@ public class UserController {
 
     @PostMapping("/create")
     public ResponseEntity<User> createUser(@RequestBody User user) {
+        user.setUserType(UserType.CLIENT);
         User newUser = userService.createUser(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
 
@@ -79,5 +81,11 @@ public class UserController {
     public ResponseEntity<String> deleteUser(@PathVariable Long userId) {
         userService.deleteUser(userId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("User deleted successfully");
+    }
+
+    @GetMapping("/byType")
+    public ResponseEntity<List<User>> getUsersByType(@RequestParam UserType userType) {
+        List<User> users = userService.getUsersByType(userType);
+        return ResponseEntity.ok(users);
     }
 }

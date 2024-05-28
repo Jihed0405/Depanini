@@ -2,6 +2,8 @@ package com.PFE2024.Depanini.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -37,4 +39,6 @@ public class User {
     private String address;
     @Column(length = 1000)
     private String photoUrl;
+    @Enumerated(EnumType.STRING)
+    private UserType userType;
 }

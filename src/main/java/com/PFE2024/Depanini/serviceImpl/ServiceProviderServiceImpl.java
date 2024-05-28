@@ -7,8 +7,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.PFE2024.Depanini.model.Message;
 import com.PFE2024.Depanini.model.Rating;
 import com.PFE2024.Depanini.model.ServiceProvider;
+import com.PFE2024.Depanini.repository.MessageRepository;
 import com.PFE2024.Depanini.repository.ServiceProviderRepository;
 import com.PFE2024.Depanini.service.ServiceProviderService;
 
@@ -24,6 +26,8 @@ public class ServiceProviderServiceImpl implements ServiceProviderService {
 
     @Autowired
     private ServiceProviderRepository serviceProviderRepository;
+    @Autowired
+    private MessageRepository messageRepository;
 
     @Override
     public ServiceProvider createServiceProvider(@Valid ServiceProvider serviceProvider) {
@@ -52,6 +56,17 @@ public class ServiceProviderServiceImpl implements ServiceProviderService {
     @Override
     @Transactional
     public void deleteServiceProvider(Long serviceProviderId) {
+        ServiceProvider serviceProvider = serviceProviderRepository.findById(serviceProviderId)
+                .orElseThrow(() -> new EntityNotFoundException("ServiceProvider not found"));
+
+        // Find all messages involving the service provider
+        List<Message> messages = messageRepository.findMessagesByUser(serviceProvider);
+
+        // Delete all associated messages
+        for (Message message : messages) {
+            messageRepository.delete(message);
+        }
+
         serviceProviderRepository.deleteById(serviceProviderId);
     }
 

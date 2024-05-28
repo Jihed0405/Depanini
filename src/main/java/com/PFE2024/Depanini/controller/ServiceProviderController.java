@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.PFE2024.Depanini.model.Rating;
 import com.PFE2024.Depanini.model.ServiceProvider;
+import com.PFE2024.Depanini.model.UserType;
 import com.PFE2024.Depanini.service.ServiceProviderService;
 
 @RestController
@@ -29,6 +30,7 @@ public class ServiceProviderController {
 
     @PostMapping("/create")
     public ResponseEntity<ServiceProvider> createServiceProvider(@RequestBody ServiceProvider serviceProvider) {
+        serviceProvider.setUserType(UserType.SERVICE_PROVIDER);
         ServiceProvider createdServiceProvider = serviceProviderService.createServiceProvider(serviceProvider);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdServiceProvider);
     }

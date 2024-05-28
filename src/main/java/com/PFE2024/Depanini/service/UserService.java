@@ -5,6 +5,7 @@ import java.util.List;
 import com.PFE2024.Depanini.model.Category;
 import com.PFE2024.Depanini.model.ServiceProvider;
 import com.PFE2024.Depanini.model.User;
+import com.PFE2024.Depanini.model.UserType;
 import com.PFE2024.Depanini.request.UpdateUserRequest;
 
 import jakarta.validation.Valid;
@@ -21,6 +22,8 @@ public interface UserService {
     User getUserById(Long userId);
 
     List<User> getAllUsers();
+
+    public List<User> getUsersByType(UserType userType);
 
     public void deleteUser(Long userId);
 }

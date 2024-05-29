@@ -21,6 +21,8 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(unique = true, nullable = false, length = 100)
+    private String username;
     @NotBlank(message = "First name is required")
     @Size(max = 255, message = "First name cannot exceed 255 characters")
     private String firstName;

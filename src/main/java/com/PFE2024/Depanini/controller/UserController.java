@@ -38,26 +38,6 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        user.setUserType(UserType.CLIENT);
-        User newUser = userService.createUser(user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
-
-    }
-
-    @PostMapping("/login")
-    public ResponseEntity<User> loginUser(@RequestParam String email, @RequestParam String password) {
-        User user = userService.loginUser(email, password);
-        return ResponseEntity.ok(user);
-    }
-
-    @PostMapping("/logout")
-    public ResponseEntity<String> logoutUser() {
-        userService.logoutUser();
-        return ResponseEntity.ok("Logged out successfully");
-    }
-
     @PutMapping("/{userId}")
     public ResponseEntity<User> updateUser(@PathVariable Long userId,
             @RequestBody UpdateUserRequest updateUserRequest) {

@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,7 +32,7 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Autowired
-    private ServiceProviderRepository serviceProviderRepository;
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public User createUser(@Valid User user) {
@@ -39,6 +40,7 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException(
                     "ID should not be provided for a new user. It will be generated automatically.");
         }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         User savedUser = userRepository.save(user);
 
         return savedUser;
@@ -53,6 +55,11 @@ public class UserServiceImpl implements UserService {
         } else {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid email or password");
         }
+    }
+
+    @Override
+    public Optional<User> findByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 
     @Override

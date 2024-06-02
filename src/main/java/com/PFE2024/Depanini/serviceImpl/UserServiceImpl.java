@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.PFE2024.Depanini.exception.UserNotFoundException;
+import com.PFE2024.Depanini.exception.UsernameAlreadyExistsException;
 import com.PFE2024.Depanini.model.Category;
 import com.PFE2024.Depanini.model.ServiceProvider;
 import com.PFE2024.Depanini.model.User;
@@ -73,25 +74,39 @@ public class UserServiceImpl implements UserService {
             User user = userRepository.findById(userId)
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                             "User not found with ID: " + userId));
-
+            String newUsername = updateUserRequest.getUpdatedUser().getUsername();
+            if (newUsername != null && !newUsername.equals(user.getUsername())) {
+                if (userRepository.findByUsername(newUsername).isPresent()) {
+                    throw new UsernameAlreadyExistsException("Username already exists");
+                }
+                user.setUsername(newUsername);
+            }
+            String newPassword = updateUserRequest.getUpdatedUser().getPassword();
+            if (newPassword != null) {
+                user.setPassword(newPassword);
+            }
             if (user instanceof ServiceProvider) {
                 ServiceProvider serviceProvider = (ServiceProvider) user;
-
-                // Update user information
-                User updatedUser = updateUserRequest.getUpdatedUser();
-                if (updatedUser != null) {
-                    serviceProvider.setFirstName(updatedUser.getFirstName());
-                    serviceProvider.setLastName(updatedUser.getLastName());
-                    serviceProvider.setEmail(updatedUser.getEmail());
-                    serviceProvider.setPhoneNumber(updatedUser.getPhoneNumber());
-                    serviceProvider.setAddress(updatedUser.getAddress());
-                    serviceProvider.setPhotoUrl(updatedUser.getPhotoUrl());
-                    serviceProvider.setUserType(updatedUser.getUserType());
-                }
-
-                // Update ServiceProvider information if provided
                 ServiceProvider updatedServiceProvider = updateUserRequest.getUpdatedServiceProvider();
+                String newProviderUsername = updateUserRequest.getUpdatedServiceProvider().getUsername();
+                if (newProviderUsername != null && !newProviderUsername.equals(serviceProvider.getUsername())) {
+                    if (userRepository.findByUsername(newProviderUsername).isPresent()) {
+                        throw new UsernameAlreadyExistsException("Username already exists");
+                    }
+                    serviceProvider.setUsername(newProviderUsername);
+                }
+                // Update user information
+
                 if (updatedServiceProvider != null) {
+                    serviceProvider.setPassword(updatedServiceProvider.getPassword());
+                    serviceProvider.setFirstName(updatedServiceProvider.getFirstName());
+                    serviceProvider.setLastName(updatedServiceProvider.getLastName());
+                    serviceProvider.setEmail(updatedServiceProvider.getEmail());
+                    serviceProvider.setPhoneNumber(updatedServiceProvider.getPhoneNumber());
+                    serviceProvider.setAddress(updatedServiceProvider.getAddress());
+                    serviceProvider.setPhotoUrl(updatedServiceProvider.getPhotoUrl());
+                    serviceProvider.setUserType(updatedServiceProvider.getUserType());
+
                     serviceProvider.setBio(updatedServiceProvider.getBio());
                     serviceProvider.setNumberOfExperiences(updatedServiceProvider.getNumberOfExperiences());
 
@@ -105,6 +120,7 @@ public class UserServiceImpl implements UserService {
                 User updatedUser = updateUserRequest.getUpdatedUser();
                 System.out.println("Updated User: " + updatedUser);
                 if (updatedUser != null) {
+                    user.setPassword(updatedUser.getPassword());
                     user.setFirstName(updatedUser.getFirstName());
                     user.setLastName(updatedUser.getLastName());
                     user.setEmail(updatedUser.getEmail());
@@ -117,6 +133,9 @@ public class UserServiceImpl implements UserService {
                 // Save the updated User
                 return userRepository.save(user);
             }
+
+        } catch (UsernameAlreadyExistsException e) {
+            throw e;
         } catch (Exception e) {
             // Handle unexpected exceptions and return a custom error message
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,

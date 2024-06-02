@@ -13,7 +13,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
+import com.PFE2024.Depanini.exception.EntityNotFoundException;
+import com.PFE2024.Depanini.exception.UsernameAlreadyExistsException;
 import com.PFE2024.Depanini.model.Rating;
 import com.PFE2024.Depanini.model.ServiceProvider;
 import com.PFE2024.Depanini.model.UserType;
@@ -36,11 +39,22 @@ public class ServiceProviderController {
     }
 
     @PutMapping("/{serviceProviderId}")
-    public ResponseEntity<ServiceProvider> updateServiceProvider(@PathVariable Long serviceProviderId,
+    public ResponseEntity<?> updateServiceProvider(@PathVariable Long serviceProviderId,
             @RequestBody ServiceProvider updatedServiceProvider) {
-        ServiceProvider serviceProvider = serviceProviderService.updateServiceProvider(serviceProviderId,
-                updatedServiceProvider);
-        return ResponseEntity.ok(serviceProvider);
+        try {
+            ServiceProvider serviceProvider = serviceProviderService.updateServiceProvider(serviceProviderId,
+                    updatedServiceProvider);
+            return ResponseEntity.ok(serviceProvider);
+        } catch (UsernameAlreadyExistsException e) {
+            // Handle the username already exists exception
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Username already exists");
+        } catch (EntityNotFoundException e) {
+            // Handle the entity not found exception
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("ServiceProvider not found");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    "An unexpected error occurred: " + e.getMessage());
+        }
     }
 
     @DeleteMapping("/{serviceProviderId}")

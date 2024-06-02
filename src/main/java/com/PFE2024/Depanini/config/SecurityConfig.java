@@ -38,26 +38,30 @@ public class SecurityConfig {
         http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
         http.csrf((csrf) -> csrf.disable());
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        /*
-         * http.authorizeHttpRequests(authorize ->
-         * authorize.requestMatchers("/api/authentication/**").permitAll());
-         * http.authorizeHttpRequests(
-         * authorize -> authorize.requestMatchers(HttpMethod.GET,
-         * "/api/services/**").permitAll()
-         * .requestMatchers(HttpMethod.GET, "/api/service-providers/**").permitAll()
-         * .requestMatchers(HttpMethod.GET, "/api/categories/**").permitAll());
-         * 
-         * // Restricted endpoints
-         * http.authorizeHttpRequests(authorize -> authorize
-         * .requestMatchers(HttpMethod.POST, "/api/categories/**", "/api/services/**",
-         * "/api/service_providers/**")
-         * .hasRole(UserType.ADMIN.name()));
-         * 
-         * http.authorizeHttpRequests(authorize ->
-         * authorize.anyRequest().authenticated());
-         * http.addFilterBefore(jwtAuthorizationFilter(),
-         * UsernamePasswordAuthenticationFilter.class);
-         */
+
+        http.authorizeHttpRequests(authorize -> authorize
+                // Public access for GET requests to certain endpoints
+                .requestMatchers(HttpMethod.POST, "/api/authentication/register", "/api/authentication/sign-in")
+                .permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/services/**", "/api/service-providers/**", "/api/categories/**")
+
+                .permitAll()
+
+                // Admin role required for POST, PUT, DELETE requests to certain endpoints
+                .requestMatchers(HttpMethod.POST, "/api/categories/**", "/api/services/**", "/api/service_providers/**")
+                .hasRole(UserType.ADMIN.name())
+                .requestMatchers(HttpMethod.PUT, "/api/categories/**", "/api/services/**", "/api/service_providers/**")
+                .hasRole(UserType.ADMIN.name())
+                .requestMatchers(HttpMethod.DELETE, "/api/categories/**", "/api/services/**",
+                        "/api/service_providers/**")
+                .hasRole(UserType.ADMIN.name())
+
+                // Require authentication for any other requests
+                .anyRequest().authenticated());
+
+        // Add JWT Authorization Filter before UsernamePasswordAuthenticationFilter
+        http.addFilterBefore(jwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
     }
 

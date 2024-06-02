@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.PFE2024.Depanini.exception.UserNotFoundException;
+import com.PFE2024.Depanini.exception.UsernameAlreadyExistsException;
 import com.PFE2024.Depanini.model.Category;
 import com.PFE2024.Depanini.model.ServiceProvider;
 import com.PFE2024.Depanini.model.User;
@@ -39,13 +40,16 @@ public class UserController {
     }
 
     @PutMapping("/{userId}")
-    public ResponseEntity<User> updateUser(@PathVariable Long userId,
+    public ResponseEntity<?> updateUser(@PathVariable Long userId,
             @RequestBody UpdateUserRequest updateUserRequest) {
+
         try {
             User updatedUser = userService.updateUser(userId, updateUserRequest);
             return ResponseEntity.ok(updatedUser);
         } catch (UserNotFoundException e) {
             return ResponseEntity.notFound().build();
+        } catch (UsernameAlreadyExistsException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Username already exists");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }

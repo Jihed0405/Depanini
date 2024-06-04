@@ -100,4 +100,20 @@ public class JwtProviderImpl implements JwtProvider {
                 .parseClaimsJws(token)
                 .getBody();
     }
+
+    public void expireToken(HttpServletRequest request) {
+        // Extract token from request
+        String token = SecurityUtils.extractAuthTokenFromRequest(request);
+
+        // If token is null or empty, return
+        if (token == null || token.isEmpty()) {
+            return;
+        }
+
+        // Invalidate the token by setting its expiration to a past date
+        Claims claims = extractClaims(request);
+        if (claims != null) {
+            claims.setExpiration(new Date(0));
+        }
+    }
 }

@@ -83,7 +83,7 @@ public class UserServiceImpl implements UserService {
             }
             String newPassword = updateUserRequest.getUpdatedUser().getPassword();
             if (newPassword != null) {
-                user.setPassword(newPassword);
+                user.setPassword(passwordEncoder.encode(newPassword));
             }
             if (user instanceof ServiceProvider) {
                 ServiceProvider serviceProvider = (ServiceProvider) user;
@@ -98,7 +98,7 @@ public class UserServiceImpl implements UserService {
                 // Update user information
 
                 if (updatedServiceProvider != null) {
-                    serviceProvider.setPassword(updatedServiceProvider.getPassword());
+                    serviceProvider.setPassword(passwordEncoder.encode(updatedServiceProvider.getPassword()));
                     serviceProvider.setFirstName(updatedServiceProvider.getFirstName());
                     serviceProvider.setLastName(updatedServiceProvider.getLastName());
                     serviceProvider.setEmail(updatedServiceProvider.getEmail());
@@ -120,7 +120,7 @@ public class UserServiceImpl implements UserService {
                 User updatedUser = updateUserRequest.getUpdatedUser();
                 System.out.println("Updated User: " + updatedUser);
                 if (updatedUser != null) {
-                    user.setPassword(updatedUser.getPassword());
+                    user.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
                     user.setFirstName(updatedUser.getFirstName());
                     user.setLastName(updatedUser.getLastName());
                     user.setEmail(updatedUser.getEmail());

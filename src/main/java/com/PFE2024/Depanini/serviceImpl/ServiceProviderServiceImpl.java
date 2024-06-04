@@ -2,6 +2,7 @@ package com.PFE2024.Depanini.serviceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -32,9 +33,12 @@ public class ServiceProviderServiceImpl implements ServiceProviderService {
     private MessageRepository messageRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public ServiceProvider createServiceProvider(@Valid ServiceProvider serviceProvider) {
+        serviceProvider.setPassword(passwordEncoder.encode(serviceProvider.getPassword()));
         return serviceProviderRepository.save(serviceProvider);
     }
 
@@ -56,7 +60,8 @@ public class ServiceProviderServiceImpl implements ServiceProviderService {
 
                 String newPassword = updatedServiceProvider.getPassword();
                 if (newPassword != null) {
-                    existingServiceProvider.setPassword(newPassword);
+
+                    existingServiceProvider.setPassword(passwordEncoder.encode(newPassword));
                 }
 
                 existingServiceProvider.setFirstName(updatedServiceProvider.getFirstName());

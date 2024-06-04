@@ -46,7 +46,12 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/api/services/**", "/api/service-providers/**", "/api/categories/**")
 
                 .permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/ratings/**", "/api/messages/**", "/api/users/**")
 
+                .permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/ratings/**", "/api/messages/**", "/api/users/**")
+
+                .permitAll()
                 // Admin role required for POST, PUT, DELETE requests to certain endpoints
                 .requestMatchers(HttpMethod.POST, "/api/categories/**", "/api/services/**", "/api/service_providers/**")
                 .hasRole(UserType.ADMIN.name())

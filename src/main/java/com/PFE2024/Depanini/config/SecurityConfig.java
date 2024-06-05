@@ -41,7 +41,8 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests(authorize -> authorize
                 // Public access for GET requests to certain endpoints
-                .requestMatchers(HttpMethod.POST, "/api/authentication/register", "/api/authentication/sign-in")
+                .requestMatchers(HttpMethod.POST, "/api/authentication/register", "/api/authentication/sign-in",
+                        "/api/service-providers/create")
                 .permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/services/**", "/api/service-providers/**", "/api/categories/**")
 
@@ -53,7 +54,7 @@ public class SecurityConfig {
 
                 .permitAll()
                 // Admin role required for POST, PUT, DELETE requests to certain endpoints
-                .requestMatchers(HttpMethod.POST, "/api/categories/**", "/api/services/**", "/api/service_providers/**")
+                .requestMatchers(HttpMethod.POST, "/api/categories/**", "/api/services/**")
                 .hasRole(UserType.ADMIN.name())
                 .requestMatchers(HttpMethod.PUT, "/api/categories/**", "/api/services/**", "/api/service_providers/**")
                 .hasRole(UserType.ADMIN.name())
